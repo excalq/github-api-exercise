@@ -83,6 +83,10 @@ class IssuesTest(unittest.TestCase):
       [item['title'] for item in self.gh.json_reduced],
       ["foo", "bar"]
     )
+    self.assertEqual(
+      [item['labels'] for item in self.gh.json_reduced],
+      [['foo-label1', 'foo-label2'], ['bar-label1', 'bar-label2']]
+    )
 
 if __name__ == '__main__':
   unittest.main()
