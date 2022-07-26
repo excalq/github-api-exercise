@@ -8,4 +8,4 @@ curl -s \
   -H "Accept: application/vnd.github+json" \
   -H "Authorization: token $GITHUB_TOKEN" \
   -H "state: open" https://api.github.com/repos/$(cut -d'/' -f 4,5 <<<$GITHUB_REPO)/issues \
-  | jq '.[] | {title: .title, number: .number, labels: [.labels[].name]}'
+  | jq '[ map(select(has("pull_request") | not)) | .[] | {title: .title, number: .number, labels: [.labels[].name]} ]'
