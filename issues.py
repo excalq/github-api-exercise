@@ -44,13 +44,11 @@ class GithubIssues():
       "state": "open" # Open Issues only!
     }
     gh_issues_endpoint = self.GITHUB_API + self.GITHUB_API_ISSUES_PATH.replace(r"{{REPO}}", self.query_repo)
-    print(gh_issues_endpoint)
     result = requests.get(gh_issues_endpoint, headers=headers)
     self.fetch_result = result.text
 
   def filterResults(self):
     """Uses JQ expression to transform the JSON API result to what's relevant"""
-    print(self.fetch_result)
     self.json_unfiltered = json.loads(self.fetch_result)
     self.json_reduced = pyjq.all(self.JQ_EXP, self.json_unfiltered)
 
