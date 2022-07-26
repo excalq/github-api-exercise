@@ -12,7 +12,6 @@ from dotenv import load_dotenv
 class GithubIssues():
   GITHUB_API = 'https://api.github.com/'
   GITHUB_API_ISSUES_PATH = r'repos/{{REPO}}/issues'
-  JSONPATH_EXP =  '$.[*].[title, number]' # TODO: REMOVE THIS
   JQ_EXP = 'map(select(has("pull_request") | not)) | .[] | {title: .title, number: .number, labels: [.labels[].name]}'
 
   def loadParams(self):
