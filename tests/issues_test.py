@@ -1,34 +1,37 @@
 #!/bin/env python3
 
+import json
 import unittest
+from dotenv import load_dotenv
 
 from issues import GithubIssues
 
 class IssuesTest(unittest.TestCase):
 
-  def testValidateParamsOk(self):
-    params = ['https://github.com/algorand/pyteal']
-    gh = GithubIssues()
-    self.assertTrue(gh.validateParams(params))
-    
-  def testValidateParamsMissing(self):
-    params = []
-    with self.assertRaises(SystemExit):
-      gh = GithubIssues()
-      gh.validateParams(params)
+  def setUp(self) -> None:
+    # Requires .env with a Personal Access Token
+    load_dotenv()
+    self.gh = GithubIssues()
+    self.gh.loadCredentials()
 
   def testParseRepoSimple(self):
     repo = "algorand/pyteal"
-    gh = GithubIssues()
-    self.assertEqual(gh.parseRepo(repo), 'algorand/pyteal')
+    self.assertEqual(self.gh.parseRepoName(repo), 'algorand/pyteal')
     
   def testParseRepoFromUrl(self):
     repo = "https://github.com/algorand/pyteal"
-    gh = GithubIssues()
-    self.assertEqual(gh.parseRepo(repo), 'algorand/pyteal')
+    self.assertEqual(self.gh.parseRepoName(repo), 'algorand/pyteal')
 
   def testFetchGithubAPI(self):
-    self.assertTrue(True)
+    # An archived project with open issues... but no labels :(
+    self.gh.setQueryRepo('github/brubeck')
+    self.gh.fetchAPI()
+    self.gh.filterResults()
+    self.gh.printResults()
+    # Issues + Pull Requests
+    self.assertEqual(len(self.gh.json_unfiltered), 29)
+    # Only Issues
+    self.assertEqual(len(self.gh.json_reduced), 17)
 
   def testFetchIssues(self):
     self.assertTrue(True)
